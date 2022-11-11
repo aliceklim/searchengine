@@ -11,8 +11,8 @@ public class DBConnection
     }
     private static Connection connection;
     private static String url = "jdbc:mysql://localhost:3306/search_engine?allowPublicKeyRetrieval=true&useSSL=false";
-    private static String dbUser = "alice_klim";
-    private static String dbPass = "Msq!8!msq!8!";
+    private static String dbUser = "user";
+    private static String dbPass = "pass";
     private static StringBuilder insertQuery = new StringBuilder();
     public static Connection getConnection()
     {
