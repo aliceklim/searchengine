@@ -11,8 +11,8 @@ public class DBConnection
     }
     private static Connection connection;
     private static String url = "jdbc:mysql://localhost:3306/search_engine?allowPublicKeyRetrieval=true&useSSL=false";
-    private static String dbUser = "user";
-    private static String dbPass = "pass";
+    private static String dbUser = "alice_klim";
+    private static String dbPass = "Msq!8!msq!8!";
     private static StringBuilder insertQuery = new StringBuilder();
     public static Connection getConnection()
     {
@@ -32,7 +32,7 @@ public class DBConnection
                 connection.createStatement().execute("DROP TABLE IF EXISTS page");
                 connection.createStatement().execute("CREATE TABLE page(" +
                         "id INT NOT NULL AUTO_INCREMENT, " +
-                        "site_id INT NOT NULL, " +
+                        "site_id INT, " +
                         "path TEXT NOT NULL, " +
                         "code INT NOT NULL, " +
                         "content MEDIUMTEXT NOT NULL, " +

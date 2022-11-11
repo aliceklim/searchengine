@@ -1,28 +1,31 @@
-package searchengine.model;
+package searchengine.parser;
+import searchengine.model.DBConnection;
+import searchengine.model.WebPage;
+
 import java.sql.SQLException;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.RecursiveTask;
 
 public class SiteMapCreator extends RecursiveTask<List<String>> {
-    public static  Set<WebPage> connectedList = Collections.synchronizedSet(new HashSet<>());
+    public static  Set<ParsingData> connectedList = Collections.synchronizedSet(new HashSet<>());
     public static  Set<String> processedLinks = Collections.synchronizedSet(new HashSet<>());
-    private WebPage webPage;
+    private ParsingData parsingData;
     private static List<String> linksToPrint = new ArrayList<>();;
     private static List<String> linksToPrintSafeList = Collections.synchronizedList(linksToPrint);;
 
-    public SiteMapCreator(WebPage webPage) {
-        this.webPage = webPage;
+    public SiteMapCreator(ParsingData parsingData) {
+        this.parsingData = parsingData;
     }
 
     @Override
     protected List<String> compute() {
-        String address = webPage.getADDRESS();
+        String address = parsingData.getADDRESS();
         List<SiteMapCreator> taskList = new ArrayList<>();
-        webPage.parse();
-        for (WebPage page : webPage.getChildrenList()) {
+        parsingData.parse();
+        for (ParsingData page : parsingData.getChildrenList()) {
             connectedList.addAll(page.getConnectedList());
-            if (page.getParentList().contains(page) || page.equals(webPage)) {
+            if (page.getParentList().contains(page) || page.equals(parsingData)) {
                 continue;
             }
             SiteMapCreator smcTask = new SiteMapCreator(page);
@@ -39,8 +42,8 @@ public class SiteMapCreator extends RecursiveTask<List<String>> {
         }
         return linksToPrintSafeList;
     }
-    private synchronized void addToPrintListIfProcessed(WebPage webPage) throws SQLException {
-        String page = webPage.getADDRESS();
+    private synchronized void addToPrintListIfProcessed(ParsingData parsingData) throws SQLException {
+        String page = parsingData.getADDRESS();
         if (!SiteMapCreator.processedLinks.contains(page)){
             SiteMapCreator.processedLinks.add(page);
             char someChar = '/';
@@ -54,7 +57,7 @@ public class SiteMapCreator extends RecursiveTask<List<String>> {
             for (int i = 0; i < count; i++ ){
                 sb.append("\t");
             }
-            DBConnection.addToDataBase(webPage.getADDRESS(), webPage.getStatusCode(), webPage.getBody());
+            DBConnection.addToDataBase(parsingData.getADDRESS(), parsingData.getStatusCode(), parsingData.getBody());
 
         }
     }

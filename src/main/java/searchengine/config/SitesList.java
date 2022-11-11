@@ -13,4 +13,10 @@ import java.util.List;
 @ConfigurationProperties(prefix = "indexing-settings")
 public class SitesList {
     private List<Site> sites;
+
+    public static void main(String[] args) {
+        SitesList sl = new SitesList();
+        System.out.println(sl.getSites());
+    }
 }
+
